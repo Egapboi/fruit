@@ -1,0 +1,35 @@
+[
+    {
+        "id": 1,
+        "question": "Is a tomato a fruit or a vegetable?",
+        "options": [
+            "Fruit",
+            "Vegetable",
+            "Both",
+            "Neither"
+        ],
+        "answer": "Fruit"
+    },
+    {
+        "id": 2,
+        "question": "Which of these grows underground?",
+        "options": [
+            "Apple",
+            "Potato",
+            "Tomato",
+            "Strawberry"
+        ],
+        "answer": "Potato"
+    },
+    {
+        "id": 3,
+        "question": "What is the main ingredient in guacamole?",
+        "options": [
+            "Tomato",
+            "Avocado",
+            "Onion",
+            "Pepper"
+        ],
+        "answer": "Avocado"
+    }
+]
