@@ -1,0 +1,23 @@
+[
+    {
+        "id": 1,
+        "name": "Tomato",
+        "description": "The tomato is the edible berry of the plant Solanum lycopersicum.",
+        "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/8/89/Tomato_je.jpg",
+        "category": "Fruit (Botanical)"
+    },
+    {
+        "id": 2,
+        "name": "Potato",
+        "description": "The potato is a starchy tuber of the plant Solanum tuberosum.",
+        "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/a/ab/Patates.jpg",
+        "category": "Vegetable"
+    },
+    {
+        "id": 3,
+        "name": "Strawberry",
+        "description": "The garden strawberry is a widely grown hybrid species of the genus Fragaria.",
+        "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/2/29/PerfectStrawberry.jpg",
+        "category": "Fruit"
+    }
+]
