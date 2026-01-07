@@ -1,9 +1,9 @@
 import axios from 'axios';
 
-const useMock = true; // Set to false when backend is ready
+const useMock = false; // Set to false to use real backend
 
 const api = axios.create({
-  baseURL: 'http://localhost:3000/api', // Update with actual backend URL
+  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api', // Update with actual backend URL
   headers: {
     'Content-Type': 'application/json',
   },
