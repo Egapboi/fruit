@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import Button from '../components/Button';
 import Input from '../components/Input';
 import { login } from '../services/api';
-import { Lock, Mail } from 'lucide-react';
+import { Leaf } from 'lucide-react';
 
 const Login = () => {
     const [formData, setFormData] = useState({ username: '', password: '' });
@@ -23,7 +23,7 @@ const Login = () => {
         try {
             const response = await login(formData);
             localStorage.setItem('token', response.data.token);
-            localStorage.setItem('user', JSON.stringify(response.data.user));
+            localStorage.setItem('user', JSON.stringify(response.data));
             navigate('/dashboard');
         } catch (err) {
             setError('Invalid username or password');
@@ -33,65 +33,62 @@ const Login = () => {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen">
+        <div className="auth-container">
             <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="glass-panel p-8 w-full max-w-md mx-4 text-center"
+                initial={{ opacity: 0, y: 30, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
+                className="glass-panel auth-card"
             >
-                <h2 className="text-3xl font-bold mb-6 text-white">Welcome Back</h2>
-                <p className="text-gray-300 mb-8">Login to continue your plant journey</p>
+                {/* Logo/Icon */}
+                <div className="text-center mb-6">
+                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/20 mb-4">
+                        <Leaf size={32} className="text-primary" />
+                    </div>
+                    <h2 className="text-3xl font-bold text-white mb-2">Welcome Back</h2>
+                    <p className="text-muted">Sign in to continue your plant journey</p>
+                </div>
 
-                <form onSubmit={handleSubmit} className="space-y-4 text-left">
-                    <div className="relative">
-                        {/* Icon placeholder if needed, styling handled by input-field usually */}
-                        <div className="mb-4">
-                            <label className="block text-sm font-medium text-gray-400 mb-1">Username</label>
-                            <Input
-                                type="text"
-                                name="username"
-                                placeholder="Enter your username"
-                                value={formData.username}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
-                        <div className="mb-6">
-                            <label className="block text-sm font-medium text-gray-400 mb-1">Password</label>
-                            <Input
-                                type="password"
-                                name="password"
-                                placeholder="Enter your password"
-                                value={formData.password}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
+                <form onSubmit={handleSubmit}>
+                    <div className="form-group">
+                        <label>Username</label>
+                        <Input
+                            type="text"
+                            name="username"
+                            placeholder="Enter your username"
+                            value={formData.username}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label>Password</label>
+                        <Input
+                            type="password"
+                            name="password"
+                            placeholder="Enter your password"
+                            value={formData.password}
+                            onChange={handleChange}
+                            required
+                        />
                     </div>
 
-                    {error && <p className="text-red-400 text-sm text-center mb-4">{error}</p>}
+                    {error && <p className="error-text">{error}</p>}
 
                     <Button type="submit" className="w-full" disabled={loading}>
-                        {loading ? 'Logging in...' : 'Login'}
+                        {loading ? 'Signing in...' : 'Sign In'}
                     </Button>
                 </form>
 
-                <p className="mt-6 text-gray-400">
-                    Don't have an account? <Link to="/signup" className="text-primary hover:text-white transition-colors">Sign up</Link>
+                <p className="text-center mt-6 text-muted">
+                    Don't have an account?{' '}
+                    <Link to="/signup" className="text-primary hover:text-white transition-colors">
+                        Create one
+                    </Link>
                 </p>
             </motion.div>
         </div>
     );
 };
-
-// Add some specific styles for this page if needed via inline or css module, 
-// but here we rely on utility classes. 
-// Since we don't have Tailwind fully configured with 'flex', 'items-center' etc, 
-// I will need to ensure these utilities exist in index.css OR use standard CSS.
-// I will add the missing utilities to index.css in a subsequent step or fix here.
-// For now, I'll use inline styles or standard class names if I defined them.
-// I did NOT define 'flex', 'items-center' in index.css.
-// I should probably stick to standard CSS classes for layout in the component or update index.css.
-// I'll update the classNames to be more BEM-like or add a style block.
 
 export default Login;

@@ -1,29 +1,19 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-import PropTypes from 'prop-types';
 
-const Button = ({ children, onClick, type = 'button', className = '', disabled = false }) => {
+const Button = ({ children, onClick, type = 'button', disabled = false, variant = 'primary', className = '', ...props }) => {
+    const baseClass = variant === 'secondary' ? 'btn-secondary' : 'btn-primary';
+
     return (
-        <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+        <button
             type={type}
             onClick={onClick}
             disabled={disabled}
-            className={`btn-primary ${className}`}
-            style={{ opacity: disabled ? 0.7 : 1, cursor: disabled ? 'not-allowed' : 'pointer' }}
+            className={`${baseClass} ${className}`}
+            {...props}
         >
             {children}
-        </motion.button>
+        </button>
     );
-};
-
-Button.propTypes = {
-    children: PropTypes.node.isRequired,
-    onClick: PropTypes.func,
-    type: PropTypes.oneOf(['button', 'submit', 'reset']),
-    className: PropTypes.string,
-    disabled: PropTypes.bool,
 };
 
 export default Button;

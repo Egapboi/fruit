@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import Button from '../components/Button';
 import Input from '../components/Input';
 import { signup } from '../services/api';
+import { Sprout } from 'lucide-react';
 
 const Signup = () => {
     const [formData, setFormData] = useState({ username: '', password: '' });
@@ -21,11 +22,11 @@ const Signup = () => {
         setError(null);
         try {
             const response = await signup(formData);
-            localStorage.setItem('token', response.data.token);
-            localStorage.setItem('user', JSON.stringify(response.data.user));
+            localStorage.setItem('token', response.data.token || 'temp-token');
+            localStorage.setItem('user', JSON.stringify(response.data));
             navigate('/dashboard');
         } catch (err) {
-            setError('Signup failed. Please try again.');
+            setError('Signup failed. Username may already exist.');
         } finally {
             setLoading(false);
         }
@@ -34,12 +35,19 @@ const Signup = () => {
     return (
         <div className="auth-container">
             <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, y: 30, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
                 className="glass-panel auth-card"
             >
-                <h2 style={{ textAlign: 'center', marginBottom: '1.5rem', fontSize: '2rem' }}>Create Account</h2>
-                <p style={{ textAlign: 'center', color: 'var(--text-muted)', marginBottom: '2rem' }}>Join the community</p>
+                {/* Logo/Icon */}
+                <div className="text-center mb-6">
+                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/20 mb-4">
+                        <Sprout size={32} className="text-primary" />
+                    </div>
+                    <h2 className="text-3xl font-bold text-white mb-2">Join the Garden</h2>
+                    <p className="text-muted">Create your account to get started</p>
+                </div>
 
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
@@ -67,13 +75,16 @@ const Signup = () => {
 
                     {error && <p className="error-text">{error}</p>}
 
-                    <Button type="submit" className="w-full" disabled={loading} style={{ marginTop: '1rem', width: '100%' }}>
-                        {loading ? 'Creating Account...' : 'Sign Up'}
+                    <Button type="submit" className="w-full" disabled={loading}>
+                        {loading ? 'Creating account...' : 'Create Account'}
                     </Button>
                 </form>
 
-                <p style={{ textAlign: 'center', marginTop: '1.5rem', color: 'var(--text-muted)' }}>
-                    Already have an account? <Link to="/login" style={{ color: 'var(--primary)', textDecoration: 'none' }}>Login</Link>
+                <p className="text-center mt-6 text-muted">
+                    Already have an account?{' '}
+                    <Link to="/login" className="text-primary hover:text-white transition-colors">
+                        Sign in
+                    </Link>
                 </p>
             </motion.div>
         </div>
