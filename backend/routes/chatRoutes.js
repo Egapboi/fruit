@@ -3,7 +3,7 @@ const { GoogleGenAI } = require('@google/genai');
 const router = express.Router();
 
 // Initialize Gemini with API key
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY || 'AIzaSyCJVA0iRrM_E4Wr1f5gT59GeX9S2RQ6oFA';
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || 'Your_API_Key';
 const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 
 // System prompt for the plant assistant
