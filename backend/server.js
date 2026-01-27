@@ -6,6 +6,7 @@ const authRoutes = require('./routes/authRoutes');
 const plantRoutes = require('./routes/plantRoutes');
 const quizRoutes = require('./routes/quizRoutes');
 const aiRoutes = require('./routes/aiRoutes');
+const chatRoutes = require('./routes/chatRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -26,6 +27,7 @@ app.use(express.urlencoded({ extended: true }));
         app.use('/api/plants', plantRoutes);
         app.use('/api/quiz', quizRoutes);
         app.use('/api/ai', aiRoutes);
+        app.use('/api/chat', chatRoutes);
 
         app.get('/', (req, res) => {
             res.send('Fruit Backend is running!');

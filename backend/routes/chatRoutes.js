@@ -1,0 +1,59 @@
+const express = require('express');
+const { GoogleGenerativeAI } = require('@google/generative-ai');
+const router = express.Router();
+
+// Initialize Gemini with API key
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || 'AIzaSyCJVA0iRrM_E4Wr1f5gT59GeX9S2RQ6oFA';
+const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+
+// System prompt for the plant assistant
+const SYSTEM_PROMPT = `You are "Gardening Buddy", a friendly plant care assistant. Be concise (2-4 sentences). Help with watering, sunlight, soil, pests, propagation, and growing tips. Use emojis sparingly 🌱`;
+
+// Chat endpoint
+router.post('/', async (req, res) => {
+    const { message, history = [] } = req.body;
+
+    if (!message) {
+        return res.status(400).json({ error: 'Message is required' });
+    }
+
+    try {
+        // Use Gemini Pro
+        const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+
+        // Build prompt with context
+        let fullPrompt = SYSTEM_PROMPT + '\n\n';
+
+        // Add conversation history
+        if (history.length > 0) {
+            fullPrompt += 'Previous conversation:\n';
+            history.slice(-6).forEach(msg => {
+                fullPrompt += `${msg.sender === 'user' ? 'User' : 'Assistant'}: ${msg.text}\n`;
+            });
+            fullPrompt += '\n';
+        }
+
+        fullPrompt += `User: ${message}\nAssistant:`;
+
+        // Generate response
+        const result = await model.generateContent(fullPrompt);
+        const response = result.response.text();
+
+        res.json({
+            reply: response.trim(),
+            success: true
+        });
+
+    } catch (error) {
+        console.error('Gemini API error:', error.message);
+
+        // Fallback response if API fails
+        res.json({
+            reply: "I'm having trouble connecting right now. For most plants, water when the top inch of soil is dry, and ensure they get appropriate light for their species. Try asking me again in a moment! 🌿",
+            success: false,
+            error: error.message
+        });
+    }
+});
+
+module.exports = router;
