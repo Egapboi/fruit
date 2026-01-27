@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import ReactMarkdown from 'react-markdown';
 import api from '../services/api';
 import { Send, Bot, User, Sparkles } from 'lucide-react';
 
@@ -91,8 +92,8 @@ const Chatbot = () => {
                         >
                             <div className={`flex items-start gap-2 max-w-[85%] ${msg.sender === 'user' ? 'flex-row-reverse' : ''}`}>
                                 <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${msg.sender === 'user'
-                                        ? 'bg-primary/20'
-                                        : 'bg-violet-500/20'
+                                    ? 'bg-primary/20'
+                                    : 'bg-violet-500/20'
                                     }`}>
                                     {msg.sender === 'user'
                                         ? <User size={16} className="text-primary" />
@@ -100,10 +101,16 @@ const Chatbot = () => {
                                     }
                                 </div>
                                 <div className={`p-3 rounded-2xl ${msg.sender === 'user'
-                                        ? 'bg-primary text-white rounded-tr-sm'
-                                        : 'bg-white/5 border border-white/10 text-gray-200 rounded-tl-sm'
+                                    ? 'bg-primary text-white rounded-tr-sm'
+                                    : 'bg-white/5 border border-white/10 text-gray-200 rounded-tl-sm'
                                     }`}>
-                                    <p className="text-sm leading-relaxed whitespace-pre-wrap">{msg.text}</p>
+                                    {msg.sender === 'user' ? (
+                                        <p className="text-sm leading-relaxed whitespace-pre-wrap">{msg.text}</p>
+                                    ) : (
+                                        <div className="text-sm leading-relaxed prose prose-invert prose-sm max-w-none">
+                                            <ReactMarkdown>{msg.text}</ReactMarkdown>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </motion.div>
