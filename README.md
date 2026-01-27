@@ -215,4 +215,4 @@ MIT License - feel free to use and modify!
 
 ---
 
-Made with 💚 by Gardening Buddy Team
+Made with 💚 by Sunil(me) and Jiban
