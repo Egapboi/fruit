@@ -6,6 +6,7 @@ import PlantSelector from './pages/PlantSelector';
 import CareGuide from './pages/CareGuide';
 import CameraUpload from './pages/CameraUpload';
 import Quiz from './pages/Quiz';
+import Leaderboard from './pages/Leaderboard';
 import Chatbot from './pages/Chatbot';
 import Navbar from './components/Navbar';
 import './index.css';
@@ -41,6 +42,7 @@ function App() {
           <Route path="/care" element={<ProtectedLayout><CareGuide /></ProtectedLayout>} />
           <Route path="/camera" element={<ProtectedLayout><CameraUpload /></ProtectedLayout>} />
           <Route path="/quiz" element={<ProtectedLayout><Quiz /></ProtectedLayout>} />
+          <Route path="/leaderboard" element={<ProtectedLayout><Leaderboard /></ProtectedLayout>} />
           <Route path="/chat" element={<ProtectedLayout><Chatbot /></ProtectedLayout>} />
         </Routes>
       </div>

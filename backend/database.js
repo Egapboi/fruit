@@ -21,10 +21,18 @@ async function initializeDatabase() {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER,
         quiz_score INTEGER,
+        total_questions INTEGER DEFAULT 5,
         last_quiz_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY(user_id) REFERENCES users(id)
     );
   `);
+
+  // Add total_questions column if it doesn't exist (for existing databases)
+  try {
+    await db.run('ALTER TABLE progress ADD COLUMN total_questions INTEGER DEFAULT 5');
+  } catch (e) {
+    // Column already exists, ignore error
+  }
 
   console.log('Database initialized');
   return db;

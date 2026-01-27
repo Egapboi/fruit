@@ -31,5 +31,192 @@
             "Pepper"
         ],
         "answer": "Avocado"
+    },
+    {
+        "id": 4,
+        "question": "Which fruit is known as the 'king of fruits'?",
+        "options": [
+            "Apple",
+            "Mango",
+            "Durian",
+            "Banana"
+        ],
+        "answer": "Durian"
+    },
+    {
+        "id": 5,
+        "question": "How often should you water a succulent?",
+        "options": [
+            "Every day",
+            "Every 1-2 weeks",
+            "Every month",
+            "Never"
+        ],
+        "answer": "Every 1-2 weeks"
+    },
+    {
+        "id": 6,
+        "question": "What gas do plants absorb from the air?",
+        "options": [
+            "Oxygen",
+            "Nitrogen",
+            "Carbon Dioxide",
+            "Hydrogen"
+        ],
+        "answer": "Carbon Dioxide"
+    },
+    {
+        "id": 7,
+        "question": "Which vegetable is actually a flower?",
+        "options": [
+            "Carrot",
+            "Broccoli",
+            "Potato",
+            "Onion"
+        ],
+        "answer": "Broccoli"
+    },
+    {
+        "id": 8,
+        "question": "What is the process by which plants make food called?",
+        "options": [
+            "Respiration",
+            "Photosynthesis",
+            "Digestion",
+            "Fermentation"
+        ],
+        "answer": "Photosynthesis"
+    },
+    {
+        "id": 9,
+        "question": "Which fruit has its seeds on the outside?",
+        "options": [
+            "Apple",
+            "Orange",
+            "Strawberry",
+            "Grape"
+        ],
+        "answer": "Strawberry"
+    },
+    {
+        "id": 10,
+        "question": "What is the largest fruit that grows on a tree?",
+        "options": [
+            "Coconut",
+            "Jackfruit",
+            "Mango",
+            "Papaya"
+        ],
+        "answer": "Jackfruit"
+    },
+    {
+        "id": 11,
+        "question": "Which plant is known for purifying indoor air?",
+        "options": [
+            "Cactus",
+            "Snake Plant",
+            "Rose",
+            "Tulip"
+        ],
+        "answer": "Snake Plant"
+    },
+    {
+        "id": 12,
+        "question": "What color light do plants use least for photosynthesis?",
+        "options": [
+            "Red",
+            "Blue",
+            "Green",
+            "Yellow"
+        ],
+        "answer": "Green"
+    },
+    {
+        "id": 13,
+        "question": "Which herb is commonly used in Italian cooking?",
+        "options": [
+            "Cilantro",
+            "Basil",
+            "Mint",
+            "Dill"
+        ],
+        "answer": "Basil"
+    },
+    {
+        "id": 14,
+        "question": "What do you call a plant that lives for more than two years?",
+        "options": [
+            "Annual",
+            "Biennial",
+            "Perennial",
+            "Seasonal"
+        ],
+        "answer": "Perennial"
+    },
+    {
+        "id": 15,
+        "question": "Which fruit is a natural source of caffeine?",
+        "options": [
+            "Orange",
+            "Coffee Cherry",
+            "Apple",
+            "Banana"
+        ],
+        "answer": "Coffee Cherry"
+    },
+    {
+        "id": 16,
+        "question": "What is the best time to water plants?",
+        "options": [
+            "Noon",
+            "Early morning",
+            "Late evening",
+            "Midnight"
+        ],
+        "answer": "Early morning"
+    },
+    {
+        "id": 17,
+        "question": "Which vegetable can regrow from its scraps in water?",
+        "options": [
+            "Carrot",
+            "Green Onion",
+            "Potato",
+            "Tomato"
+        ],
+        "answer": "Green Onion"
+    },
+    {
+        "id": 18,
+        "question": "What nutrient is most responsible for leaf growth?",
+        "options": [
+            "Phosphorus",
+            "Potassium",
+            "Nitrogen",
+            "Calcium"
+        ],
+        "answer": "Nitrogen"
+    },
+    {
+        "id": 19,
+        "question": "Which of these is NOT a citrus fruit?",
+        "options": [
+            "Lemon",
+            "Lime",
+            "Mango",
+            "Grapefruit"
+        ],
+        "answer": "Mango"
+    },
+    {
+        "id": 20,
+        "question": "What is composting?",
+        "options": [
+            "Burning waste",
+            "Decomposing organic matter",
+            "Freezing food",
+            "Drying leaves"
+        ],
+        "answer": "Decomposing organic matter"
     }
 ]

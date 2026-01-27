@@ -39,13 +39,14 @@ const Quiz = () => {
 
     const submitScore = async (finalScore) => {
         try {
-            // Assuming user is stored in localStorage and has an ID. 
-            // Ideally we get user from context or local storage.
-            // Since Login.jsx stored 'user' object:
             const userStr = localStorage.getItem('user');
             if (userStr) {
                 const user = JSON.parse(userStr);
-                await api.post('/quiz/submit', { userId: user.id || 1, score: finalScore }); // Default ID 1 if missing
+                await api.post('/quiz/submit', {
+                    userId: user.id || 1,
+                    score: finalScore,
+                    totalQuestions: questions.length
+                });
             }
         } catch (error) {
             console.error('Error submitting score:', error);

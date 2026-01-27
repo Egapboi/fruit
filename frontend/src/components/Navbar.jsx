@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Home, Camera, BookOpen, MessageCircle, LogOut, HelpCircle } from 'lucide-react';
+import { Home, Camera, BookOpen, MessageCircle, LogOut, HelpCircle, Trophy } from 'lucide-react';
 
 const Navbar = () => {
     const location = useLocation();
@@ -37,6 +37,9 @@ const Navbar = () => {
             </Link>
             <Link to="/chat" className={`nav-link ${isActive('/chat') ? 'active' : ''}`} title="Chat">
                 <MessageCircle size={24} />
+            </Link>
+            <Link to="/leaderboard" className={`nav-link ${isActive('/leaderboard') ? 'active' : ''}`} title="Leaderboard">
+                <Trophy size={24} />
             </Link>
             <Link to="/care" className={`nav-link ${isActive('/care') ? 'active' : ''}`} title="Care Guide">
                 <HelpCircle size={24} />
