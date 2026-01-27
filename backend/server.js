@@ -28,7 +28,7 @@ app.use(express.urlencoded({ extended: true }));
         app.use('/api/ai', aiRoutes);
 
         app.get('/', (req, res) => {
-            res.send('Furit Backend is running!');
+            res.send('Fruit Backend is running!');
         });
 
         app.listen(PORT, () => {

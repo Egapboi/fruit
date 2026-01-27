@@ -6,7 +6,7 @@ import Input from '../components/Input';
 import { signup } from '../services/api';
 
 const Signup = () => {
-    const [formData, setFormData] = useState({ name: '', email: '', password: '' });
+    const [formData, setFormData] = useState({ username: '', password: '' });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
@@ -43,23 +43,12 @@ const Signup = () => {
 
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
-                        <label>Full Name</label>
+                        <label>Username</label>
                         <Input
                             type="text"
-                            name="name"
-                            placeholder="Enter your name"
-                            value={formData.name}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label>Email</label>
-                        <Input
-                            type="email"
-                            name="email"
-                            placeholder="Enter your email"
-                            value={formData.email}
+                            name="username"
+                            placeholder="Choose a username"
+                            value={formData.username}
                             onChange={handleChange}
                             required
                         />

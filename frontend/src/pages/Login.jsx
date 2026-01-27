@@ -7,7 +7,7 @@ import { login } from '../services/api';
 import { Lock, Mail } from 'lucide-react';
 
 const Login = () => {
-    const [formData, setFormData] = useState({ email: '', password: '' });
+    const [formData, setFormData] = useState({ username: '', password: '' });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
@@ -26,7 +26,7 @@ const Login = () => {
             localStorage.setItem('user', JSON.stringify(response.data.user));
             navigate('/dashboard');
         } catch (err) {
-            setError('Invalid email or password');
+            setError('Invalid username or password');
         } finally {
             setLoading(false);
         }
@@ -46,12 +46,12 @@ const Login = () => {
                     <div className="relative">
                         {/* Icon placeholder if needed, styling handled by input-field usually */}
                         <div className="mb-4">
-                            <label className="block text-sm font-medium text-gray-400 mb-1">Email</label>
+                            <label className="block text-sm font-medium text-gray-400 mb-1">Username</label>
                             <Input
-                                type="email"
-                                name="email"
-                                placeholder="Enter your email"
-                                value={formData.email}
+                                type="text"
+                                name="username"
+                                placeholder="Enter your username"
+                                value={formData.username}
                                 onChange={handleChange}
                                 required
                             />
