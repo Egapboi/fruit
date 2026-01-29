@@ -53,7 +53,7 @@ A modern full-stack plant care application with AI-powered features, built with 
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/YOUR-USERNAME/fruit.git
+   git clone https://github.com/Egapboi/fruit.git
    cd fruit
    ```
 
