@@ -35,4 +35,12 @@ export const getPlants = async () => {
   return api.get('/plants');
 };
 
+export const analyzePlant = async (formData) => {
+  return api.post('/plants/analyze', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+};
+
 export default api;

@@ -1,4 +1,4 @@
-﻿# 🌱 Gardening Buddy
+# 🌱 Gardening Buddy
 
 A modern full-stack plant care application with AI-powered features, built with React and Node.js.
 
@@ -13,10 +13,9 @@ A modern full-stack plant care application with AI-powered features, built with 
 - Suggested questions for new users
 
 ### 📸 Plant Identification
-- **TensorFlow.js** integration ready for Teachable Machine models
+- **Gemini 2.5 Flash Vision** integration for classifying uploaded plant photos
 - Upload or capture plant photos
-- Intelligent demo mode with 15+ plant predictions
-- Shows care info: watering, light, and difficulty level
+- Automatically detects the plant and shows care info: watering, light, and difficulty level
 
 ### 📝 Dynamic Quiz System
 - **20 randomized questions** about plants and gardening
@@ -87,26 +86,18 @@ A modern full-stack plant care application with AI-powered features, built with 
 
 ---
 
-## ⚙️ Configuration
-
-### Gemini AI (Chatbot)
-The chatbot uses **Gemini 2.5 Flash**. The API key is configured in:
+### Environment Setup
+Create a `.env` file in the `backend/` directory by copying `.env.example`:
 ```
-backend/routes/chatRoutes.js
+PORT=3000
+JWT_SECRET=supersecretkey
+GEMINI_API_KEY=your-gemini-api-key-here
 ```
 
-To use your own API key:
-1. Get a free key from [Google AI Studio](https://aistudio.google.com/)
-2. Set environment variable: `GEMINI_API_KEY=your-key-here`
-
-### Plant Identification (Teachable Machine)
-To use a custom Teachable Machine model:
-1. Train at [Teachable Machine](https://teachablemachine.withgoogle.com/)
-2. Create `frontend/.env`:
-   ```
-   VITE_PLANT_MODEL_URL=https://teachablemachine.withgoogle.com/models/YOUR_ID/
-   ```
-3. Restart the frontend
+Create a `.env` file in the `frontend/` directory by copying `.env.example`:
+```
+VITE_API_BASE_URL=http://localhost:3000/api
+```
 
 ---
 
@@ -138,8 +129,7 @@ fruit/
 │   │   │   └── Chatbot.jsx
 │   │   ├── components/
 │   │   ├── services/
-│   │   │   ├── api.js
-│   │   │   └── plantModel.js
+│   │   │   └── api.js
 │   │   └── index.css       # Liquid Glass styles
 │   └── package.json
 │
@@ -156,13 +146,8 @@ fruit/
    - Free tier has rate limits; chatbot may fail if quota exceeded
    - Wait a few minutes and try again
 
-2. **Plant Identification (Demo Mode)**
-   - Without a configured Teachable Machine model, uses random predictions
-   - Color-based analysis is approximate, not real AI classification
-
-3. **TensorFlow.js Loading**
-   - First load may be slow (downloads ~5MB model)
-   - May fail on older browsers or low-memory devices
+2. **Plant Identification**
+   - Depends on the Gemini Vision API availability. Ensure your API key has quota remaining and has vision model access enabled.
 
 4. **SQLite Database**
    - Data stored in `backend/fruit_app.db`
@@ -193,8 +178,7 @@ fruit/
 | UI | Vanilla CSS (Liquid Glass design) |
 | Backend | Node.js, Express |
 | Database | SQLite |
-| AI Chat | Google Gemini 2.5 Flash |
-| Plant ID | TensorFlow.js, Teachable Machine |
+| Background AI | Google Gemini 2.5 Flash (Chat & Image Analysis) |
 | Auth | JWT, bcryptjs |
 
 ---

@@ -1,50 +1,42 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import Button from '../components/Button';
 import { motion } from 'framer-motion';
 import { Camera, Leaf, Droplets, Sun, Heart } from 'lucide-react';
-import { loadModel, classifyImage, hasModelURL } from '../services/plantModel';
+import { analyzePlant } from '../services/api';
 
 const CameraUpload = () => {
     const [image, setImage] = useState(null);
+    const [file, setFile] = useState(null);
     const [result, setResult] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [modelLoading, setModelLoading] = useState(true);
+    const [error, setError] = useState(null);
     const imgRef = useRef(null);
-
-    useEffect(() => {
-        initModel();
-    }, []);
-
-    const initModel = async () => {
-        setModelLoading(true);
-        await loadModel();
-        setModelLoading(false);
-    };
 
     const handleFileChange = (e) => {
         const selectedFile = e.target.files[0];
         if (selectedFile) {
             const imageUrl = URL.createObjectURL(selectedFile);
             setImage(imageUrl);
+            setFile(selectedFile);
             setResult(null);
+            setError(null);
         }
     };
 
     const handleIdentify = async () => {
-        if (!image || !imgRef.current) return;
+        if (!file) return;
 
         setLoading(true);
+        setError(null);
         try {
-            if (!imgRef.current.complete) {
-                await new Promise(resolve => {
-                    imgRef.current.onload = resolve;
-                });
-            }
+            const formData = new FormData();
+            formData.append('image', file);
 
-            const prediction = await classifyImage(imgRef.current);
-            setResult(prediction);
-        } catch (error) {
-            console.error('Identification error:', error);
+            const response = await analyzePlant(formData);
+            setResult(response.data);
+        } catch (err) {
+            console.error('Identification error:', err);
+            setError('Failed to analyze the image. Please make sure the backend is running and the Gemini API key is configured correctly.');
         } finally {
             setLoading(false);
         }
@@ -63,20 +55,6 @@ const CameraUpload = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
             >
-                {/* Demo Mode Notice */}
-                {!modelLoading && !hasModelURL() && (
-                    <motion.div
-                        className="mb-6 p-4 rounded-xl bg-primary/10 border border-primary/20"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                    >
-                        <p className="text-sm text-primary flex items-center gap-2">
-                            <Leaf size={16} />
-                            <span>Demo mode with intelligent predictions</span>
-                        </p>
-                    </motion.div>
-                )}
-
                 {/* Upload Zone */}
                 <div className={`upload-zone ${image ? 'has-image' : ''}`}>
                     {image ? (
@@ -115,7 +93,7 @@ const CameraUpload = () => {
                     </label>
 
                     {image && (
-                        <Button onClick={handleIdentify} disabled={loading || modelLoading} className="w-full">
+                        <Button onClick={handleIdentify} disabled={loading} className="w-full">
                             {loading ? (
                                 <span className="flex items-center justify-center gap-2">
                                     <Leaf className="animate-spin" size={18} />
@@ -131,6 +109,16 @@ const CameraUpload = () => {
                     )}
                 </div>
 
+                {error && (
+                    <motion.div
+                        className="mt-6 p-4 rounded-xl bg-red-500/20 border border-red-500/30"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                    >
+                        <p className="text-sm text-red-200 text-center">{error}</p>
+                    </motion.div>
+                )}
+
                 {/* Results */}
                 {result && (
                     <motion.div
@@ -143,12 +131,14 @@ const CameraUpload = () => {
                                 <h3 className="text-xl font-bold text-primary">{result.plantName}</h3>
                                 <p className="text-sm text-muted">{result.category}</p>
                             </div>
+                            {result.confidence && (
                             <div className="text-right">
                                 <span className="text-2xl font-bold text-white">
-                                    {(result.confidence * 100).toFixed(0)}%
+                                    {(Number(result.confidence) * 100).toFixed(0)}%
                                 </span>
                                 <p className="text-xs text-muted">confidence</p>
                             </div>
+                            )}
                         </div>
 
                         <p className="text-gray-300 text-sm mb-4">{result.description}</p>
@@ -172,12 +162,6 @@ const CameraUpload = () => {
                                     <p className="text-sm font-medium">{result.light}</p>
                                 </div>
                             </div>
-                        )}
-
-                        {result.isDemo && (
-                            <p className="text-xs text-center text-muted mt-4 pt-3 border-t border-white/10">
-                                Demo prediction • Configure Teachable Machine for real results
-                            </p>
                         )}
                     </motion.div>
                 )}
