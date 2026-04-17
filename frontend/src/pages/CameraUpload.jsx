@@ -1,31 +1,51 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Button from '../components/Button';
 import { motion } from 'framer-motion';
-import { Camera, Leaf, Droplets, Sun, Heart } from 'lucide-react';
+import { Camera, Leaf, Droplets, Sun, Heart, RefreshCw, Upload } from 'lucide-react';
 import { analyzePlant } from '../services/api';
 
 const CameraUpload = () => {
     const [image, setImage] = useState(null);
-    const [file, setFile] = useState(null);
     const [result, setResult] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const imgRef = useRef(null);
+    
+    const videoRef = useRef(null);
+    const canvasRef = useRef(null);
+    const streamRef = useRef(null);
+    const fileInputRef = useRef(null);
 
-    const handleFileChange = (e) => {
-        const selectedFile = e.target.files[0];
-        if (selectedFile) {
-            const imageUrl = URL.createObjectURL(selectedFile);
-            setImage(imageUrl);
-            setFile(selectedFile);
-            setResult(null);
-            setError(null);
+    const startCamera = async () => {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ 
+                video: { facingMode: 'environment' } 
+            });
+            streamRef.current = stream;
+            if (videoRef.current) {
+                videoRef.current.srcObject = stream;
+            }
+        } catch (err) {
+            console.error("Error accessing camera:", err);
+            setError("Could not access camera. Please ensure permissions are granted.");
         }
     };
 
-    const handleIdentify = async () => {
-        if (!file) return;
+    const stopCamera = () => {
+        if (streamRef.current) {
+            streamRef.current.getTracks().forEach(track => track.stop());
+            streamRef.current = null;
+        }
+        if (videoRef.current) {
+            videoRef.current.srcObject = null;
+        }
+    };
 
+    useEffect(() => {
+        startCamera();
+        return () => stopCamera();
+    }, []);
+
+    const processImage = async (file) => {
         setLoading(true);
         setError(null);
         try {
@@ -42,70 +62,133 @@ const CameraUpload = () => {
         }
     };
 
+    const handleScan = () => {
+        if (!videoRef.current) return;
+        
+        const canvas = canvasRef.current;
+        const video = videoRef.current;
+        
+        if (video.videoWidth === 0 || video.videoHeight === 0) return;
+
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        
+        const imageDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+        setImage(imageDataUrl);
+        stopCamera();
+        
+        canvas.toBlob((blob) => {
+            if (!blob) {
+                setError("Failed to capture image.");
+                return;
+            }
+            const file = new File([blob], "capture.jpg", { type: "image/jpeg" });
+            processImage(file);
+        }, 'image/jpeg', 0.8);
+    };
+
+    const handleFileChange = (e) => {
+        const selectedFile = e.target.files[0];
+        if (selectedFile) {
+            stopCamera();
+            const imageUrl = URL.createObjectURL(selectedFile);
+            setImage(imageUrl);
+            processImage(selectedFile);
+        }
+    };
+
+    const handleRetake = () => {
+        setImage(null);
+        setResult(null);
+        setError(null);
+        startCamera();
+    };
+
     return (
         <div className="page-container">
             <div className="text-center mb-8">
-                <h1 className="text-3xl text-white mb-2">🌿 Plant Identifier</h1>
-                <p className="text-muted">AI-powered plant recognition</p>
+                <h1 className="text-3xl text-white mb-2">🌿 Plant Scanner</h1>
+                <p className="text-muted">Tap scan to identify a plant instantly</p>
             </div>
 
             <motion.div
-                className="glass-panel p-8 max-w-md mx-auto"
+                className="glass-panel p-4 md:p-8 max-w-2xl mx-auto w-full"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
             >
-                {/* Upload Zone */}
-                <div className={`upload-zone ${image ? 'has-image' : ''}`}>
-                    {image ? (
+                {/* Camera/Upload Zone */}
+                <div 
+                    className="relative rounded-xl overflow-hidden bg-black w-full"
+                    style={{ height: '65vh', minHeight: '450px', maxHeight: '800px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(255,255,255,0.1)', marginBottom: '1.5rem' }}
+                >
+                    <video 
+                        ref={videoRef} 
+                        autoPlay 
+                        playsInline 
+                        style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: image ? 0 : 10, opacity: image ? 0 : 1, transition: 'opacity 0.3s ease' }}
+                    />
+
+                    {!image && !streamRef.current && !error && (
+                        <div style={{ position: 'relative', zIndex: 20, textAlign: 'center', background: 'rgba(0,0,0,0.5)', padding: '1rem', borderRadius: '0.5rem' }}>
+                            <Camera size={48} className="mx-auto mb-2 opacity-50 animate-pulse" color="white" />
+                            <p className="text-sm text-gray-300">Starting camera...</p>
+                        </div>
+                    )}
+                    
+                    {image && (
                         <motion.img
-                            ref={imgRef}
                             src={image}
-                            alt="Preview"
-                            className="w-full max-h-64 object-contain rounded-lg"
-                            crossOrigin="anonymous"
+                            alt="Captured"
+                            style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 20 }}
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
                         />
-                    ) : (
-                        <div className="text-muted">
-                            <Camera size={48} className="mx-auto mb-3 opacity-50" />
-                            <p className="text-lg mb-1">Upload a plant photo</p>
-                            <p className="text-sm opacity-70">Tap to select or take a photo</p>
-                        </div>
                     )}
+                    <canvas ref={canvasRef} style={{ display: 'none' }} />
                 </div>
 
-                <input
-                    type="file"
-                    accept="image/*"
-                    capture="environment"
-                    onChange={handleFileChange}
-                    className="hidden"
-                    id="camera-input"
-                />
+                <div className="space-y-4">
+                    {!image ? (
+                        <>
+                            <Button onClick={handleScan} className="w-full py-4 text-xl font-bold bg-green-500 hover:bg-green-600 flex items-center justify-center gap-2">
+                                <Camera size={26} /> <span>Scan Plant</span>
+                            </Button>
+                            
+                            <div className="flex items-center justify-between my-2">
+                                <span className="h-px bg-white/10 w-full"></span>
+                                <span className="px-4 text-xs text-muted uppercase">or</span>
+                                <span className="h-px bg-white/10 w-full"></span>
+                            </div>
 
-                <div className="mt-6 space-y-3">
-                    <label htmlFor="camera-input" className="block">
-                        <div className="btn-secondary w-full text-center cursor-pointer">
-                            {image ? 'Choose Different Photo' : 'Select Photo'}
-                        </div>
-                    </label>
-
-                    {image && (
-                        <Button onClick={handleIdentify} disabled={loading} className="w-full">
-                            {loading ? (
-                                <span className="flex items-center justify-center gap-2">
-                                    <Leaf className="animate-spin" size={18} />
-                                    Analyzing...
-                                </span>
-                            ) : (
-                                <span className="flex items-center justify-center gap-2">
-                                    <Leaf size={18} />
-                                    Identify Plant
-                                </span>
-                            )}
+                            <input
+                                type="file"
+                                accept="image/*"
+                                onChange={handleFileChange}
+                                className="hidden"
+                                ref={fileInputRef}
+                                id="camera-input"
+                            />
+                            <label htmlFor="camera-input" className="block">
+                                <div className="btn-secondary w-full text-center cursor-pointer flex items-center justify-center gap-2 py-3 text-lg">
+                                    <Upload size={20} /> Upload Photo
+                                </div>
+                            </label>
+                        </>
+                    ) : (
+                        <Button onClick={handleRetake} className="w-full btn-secondary flex items-center justify-center gap-2 py-3 text-lg">
+                            <RefreshCw size={20} /> Retake Photo
                         </Button>
+                    )}
+                    
+                    {loading && (
+                        <div className="text-center py-6 text-primary border-t border-white/10 mt-6 mt-4">
+                            <Leaf className="animate-spin mx-auto mb-3" size={32} />
+                            <p className="animate-pulse text-lg">Analyzing with Gemini AI...</p>
+                        </div>
                     )}
                 </div>
 
@@ -120,45 +203,45 @@ const CameraUpload = () => {
                 )}
 
                 {/* Results */}
-                {result && (
+                {result && !loading && (
                     <motion.div
                         className="result-card mt-6"
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                     >
-                        <div className="flex items-start justify-between mb-3">
-                            <div>
-                                <h3 className="text-xl font-bold text-primary">{result.plantName}</h3>
-                                <p className="text-sm text-muted">{result.category}</p>
+                        <div className="flex items-start justify-between mb-3 border-b border-white/10 pb-4">
+                            <div className="max-w-[70%]">
+                                <h3 className="text-2xl font-bold text-primary truncate" title={result.plantName}>{result.plantName}</h3>
+                                <p className="text-sm text-muted mt-1">{result.category}</p>
                             </div>
                             {result.confidence && (
-                            <div className="text-right">
+                            <div className="text-right bg-black/30 px-3 py-2 rounded-lg shrink-0">
                                 <span className="text-2xl font-bold text-white">
                                     {(Number(result.confidence) * 100).toFixed(0)}%
                                 </span>
-                                <p className="text-xs text-muted">confidence</p>
+                                <p className="text-[10px] text-muted uppercase mt-1">match</p>
                             </div>
                             )}
                         </div>
 
-                        <p className="text-gray-300 text-sm mb-4">{result.description}</p>
+                        <p className="text-gray-300 text-sm mb-6 leading-relaxed">{result.description}</p>
 
                         {/* Care Info */}
                         {result.careLevel && (
-                            <div className="grid grid-cols-3 gap-3 pt-4 border-t border-white/10">
-                                <div className="text-center">
-                                    <Heart size={18} className="mx-auto mb-1 text-pink-400" />
-                                    <p className="text-xs text-muted">Care Level</p>
+                            <div className="grid grid-cols-3 gap-3 pt-2">
+                                <div className="text-center bg-black/20 p-3 rounded-xl border border-white/5">
+                                    <Heart size={20} className="mx-auto mb-2 text-pink-400" />
+                                    <p className="text-[10px] text-muted uppercase tracking-wider mb-1">Care</p>
                                     <p className="text-sm font-medium">{result.careLevel}</p>
                                 </div>
-                                <div className="text-center">
-                                    <Droplets size={18} className="mx-auto mb-1 text-blue-400" />
-                                    <p className="text-xs text-muted">Water</p>
+                                <div className="text-center bg-black/20 p-3 rounded-xl border border-white/5">
+                                    <Droplets size={20} className="mx-auto mb-2 text-blue-400" />
+                                    <p className="text-[10px] text-muted uppercase tracking-wider mb-1">Water</p>
                                     <p className="text-sm font-medium">{result.water}</p>
                                 </div>
-                                <div className="text-center">
-                                    <Sun size={18} className="mx-auto mb-1 text-yellow-400" />
-                                    <p className="text-xs text-muted">Light</p>
+                                <div className="text-center bg-black/20 p-3 rounded-xl border border-white/5">
+                                    <Sun size={20} className="mx-auto mb-2 text-yellow-400" />
+                                    <p className="text-[10px] text-muted uppercase tracking-wider mb-1">Light</p>
                                     <p className="text-sm font-medium">{result.light}</p>
                                 </div>
                             </div>
