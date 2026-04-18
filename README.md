@@ -101,6 +101,16 @@ VITE_API_BASE_URL=http://localhost:3000/api
 
 ---
 
+### Database Setup
+For local development, copy the provided example database or let the backend generate a fresh one automatically when it starts.
+If you want to start with an initialized schema and maybe some test data, you can simply rename the example database:
+```bash
+cp backend/fruit_app.example.db backend/fruit_app.db
+```
+*Note: The actual `fruit_app.db` file is listed in `.gitignore` to prevent live/local user data from being committed.*
+
+---
+
 ## 📁 Project Structure
 
 ```
@@ -108,6 +118,7 @@ fruit/
 ├── backend/
 │   ├── server.js           # Express server entry
 │   ├── database.js         # SQLite setup
+│   ├── fruit_app.example.db # Example SQLite database
 │   ├── routes/
 │   │   ├── authRoutes.js   # Login/Signup
 │   │   ├── chatRoutes.js   # Gemini AI chat
