@@ -280,13 +280,14 @@ const CameraUpload = () => {
                             ) : (
                                 <button 
                                     onClick={handleRetake}
-                                    className="shadow-lg"
+                                    className="shadow-xl"
                                     style={{ 
                                         width: '100%', height: '4rem', borderRadius: '1rem', color: 'white', fontWeight: 'bold', fontSize: '1.125rem', 
                                         display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', 
-                                        background: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(255, 255, 255, 0.2)', 
+                                        background: 'rgba(0, 0, 0, 0.4)', border: '1px solid rgba(255, 255, 255, 0.3)', 
                                         backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)',
-                                        cursor: 'pointer', transition: 'all 0.3s ease'
+                                        cursor: 'pointer', transition: 'all 0.3s ease',
+                                        boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.3)'
                                     }}
                                 >
                                     <RefreshCw size={24} /> Retake Photo

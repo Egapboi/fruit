@@ -115,10 +115,19 @@ const Quiz = () => {
             </div>
 
             <motion.div
-                className="glass-panel p-6 max-w-lg mx-auto"
+                className="glass-panel p-6 max-w-lg mx-auto relative overflow-hidden"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
             >
+                {!showScore && (
+                    <div className="absolute top-0 left-0 right-0 h-1 bg-white/10">
+                        <motion.div
+                            className="h-full bg-primary"
+                            initial={{ width: 0 }}
+                            animate={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }}
+                        />
+                    </div>
+                )}
                 {showScore ? (
                     <motion.div
                         className="text-center py-6"
@@ -159,22 +168,13 @@ const Quiz = () => {
                 ) : (
                     <>
                         {/* Progress */}
-                        <div className="flex items-center justify-between mb-6">
+                        <div className="flex items-center justify-between mb-6 pt-2">
                             <span className="text-primary font-semibold">
                                 Question {currentQuestion + 1}/{questions.length}
                             </span>
                             <span className="text-muted text-sm">
                                 Score: {score}
                             </span>
-                        </div>
-
-                        {/* Progress Bar */}
-                        <div className="h-1 bg-white/10 rounded-full mb-6 overflow-hidden">
-                            <motion.div
-                                className="h-full bg-primary rounded-full"
-                                initial={{ width: 0 }}
-                                animate={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }}
-                            />
                         </div>
 
                         {/* Question */}

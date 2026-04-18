@@ -79,9 +79,9 @@ const Leaderboard = () => {
                                 <div className="flex items-center justify-center w-10">
                                     {getRankIcon(entry.rank)}
                                 </div>
-                                <div className="flex-1 min-w-0">
-                                    <p className="font-semibold text-white truncate">{entry.username}</p>
-                                    <p className="text-xs text-muted flex items-center gap-1">
+                                <div className="flex-1 min-w-0 flex flex-col justify-center">
+                                    <p className="font-semibold text-white truncate mb-1">{entry.username}</p>
+                                    <p className="text-xs text-gray-400 flex items-center gap-1">
                                         <Calendar size={12} />
                                         {new Date(entry.date).toLocaleDateString()}
                                     </p>
